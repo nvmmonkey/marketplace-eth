@@ -6,13 +6,15 @@ import { BaseLayout } from "@components/layout";
 
 export default function Home() {
   return (
-    <BaseLayout>
+    <>
       <Hero />
       <Breadcrumbs />
       <WalletBar />
       <EthRates />
       <OrderCard />
       <CourseList />
-    </BaseLayout>
+    </>
   );
 }
+
+Home.Layout = BaseLayout;
