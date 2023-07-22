@@ -19,7 +19,6 @@ export default function Home() {
             <CourseList />
           </div>
         </div>
-
         <Footer />
       </div>
     </div>
