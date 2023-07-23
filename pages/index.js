@@ -3,18 +3,30 @@ import { Hero, Breadcrumbs } from "@components/common";
 import { OrderCard } from "@components/order";
 import { EthRates, WalletBar } from "@components/web3";
 import { BaseLayout } from "@components/layout";
+import { getAllCourses } from "@content/courses/fetcher";
 
-export default function Home() {
+export default function Home({ courses }) {
   return (
     <>
       <Hero />
-      <Breadcrumbs />
-      <WalletBar />
-      <EthRates />
-      <OrderCard />
+      {JSON.stringify(courses)}
       <CourseList />
     </>
   );
+}
+
+//** ------------- */
+//** STATIC RENDER */
+//** ------------- */
+
+export function getStaticProps() {
+  const { data, courseMap } = getAllCourses();
+
+  return {
+    props: {
+      courses: data,
+    },
+  };
 }
 
 Home.Layout = BaseLayout;
