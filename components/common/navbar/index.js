@@ -33,12 +33,12 @@ export default function Navbar() {
               >
                 Wish List
               </Link>
-              <Link
+              <a
                 href="#"
-                className="font-medium mr-8 text-indigo-600 hover:text-indigo-500"
+                className="px-8 py-3 border rounded-md text-base font-medium mr-8 text-white bg-indigo-600 hover:text-indigo-700"
               >
-                Log in
-              </Link>
+                Connect
+              </a>
             </div>
           </div>
         </nav>
