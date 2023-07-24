@@ -1,13 +1,15 @@
-import { CourseList } from "@components/course";
-import { Hero, Breadcrumbs } from "@components/common";
-import { OrderCard } from "@components/order";
-import { EthRates, WalletBar } from "@components/web3";
-import { BaseLayout } from "@components/layout";
+import { CourseList } from "@components/ui/course";
+import { Hero } from "@components/ui/common";
+import { BaseLayout } from "@components/ui/layout";
 import { getAllCourses } from "@content/courses/fetcher";
+import { useWeb3 } from "@components/providers";
 
 export default function Home({ courses }) {
+  const { test } = useWeb3();
+
   return (
     <>
+      {test}
       <Hero />
       <CourseList courses={courses} />
     </>
