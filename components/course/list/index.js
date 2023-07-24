@@ -1,15 +1,20 @@
+import Image from "next/image";
+
 export default function List({ courses }) {
   return (
-    <section className="grid grid-cols-2 gap-4 mb-5">
+    <section className="grid md:grid-cols-1 lg:grid-cols-2 gap-4 mb-5">
       {courses.map((course) => (
         <div
           key={course.id}
           className="bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl"
         >
-          <div className="md:flex">
-            <div className="md:flex-shrink-0">
-              <img
-                className="h-48 w-full object-cover md:w-48"
+          <div className="flex w-full h-full">
+            <div className="flex w-full h-full">
+              <Image
+                className="object-cover"
+                layout="fixed"
+                height="230"
+                width="200"
                 src={course.coverImage}
                 alt={course.title}
               />
@@ -24,9 +29,7 @@ export default function List({ courses }) {
               >
                 {course.title}
               </a>
-              <p className="mt-2 text-gray-500">
-                {course.description}
-              </p>
+              <p className="mt-2 text-gray-500">{course.description}</p>
             </div>
           </div>
         </div>
