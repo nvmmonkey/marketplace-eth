@@ -9,11 +9,6 @@ export default function Home({ courses }) {
 
   return (
     <>
-      {isLoading
-        ? "Is Loading Web3"
-        : web3
-        ? "Web3 Ready!"
-        : "Please Install Metamask!"}
       <Hero />
       <CourseList courses={courses} />
     </>
