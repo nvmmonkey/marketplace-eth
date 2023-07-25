@@ -2,7 +2,7 @@ import { useWeb3 } from "@components/providers";
 import Link from "next/link";
 
 export default function Navbar() {
-  const { connect, test } = useWeb3();
+  const { connect, isLoading, isWeb3Loaded } = useWeb3();
 
   return (
     <section>
@@ -36,12 +36,21 @@ export default function Navbar() {
               >
                 Wish List
               </Link>
-              <span
-                onClick={connect}
-                className="px-8 py-3 border rounded-md text-base font-medium mr-8 text-white bg-indigo-600 hover:text-indigo-700"
-              >
-                Connect
-              </span>
+              {isWeb3Loaded ? (
+                <span
+                  onClick={connect}
+                  className="px-8 py-3 border rounded-md text-base font-medium mr-8 text-white bg-indigo-600 hover:text-indigo-700"
+                >
+                  Connect
+                </span>
+              ) : (
+                <span
+                  onClick={connect}
+                  className="px-8 py-3 border rounded-md text-base font-medium mr-8 text-white bg-indigo-600 hover:text-indigo-700"
+                >
+                  Install Metamask
+                </span>
+              )}
             </div>
           </div>
         </nav>
