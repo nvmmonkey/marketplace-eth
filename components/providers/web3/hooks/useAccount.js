@@ -1,23 +1,24 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import useSWR from "swr";
 
-export const handler = (web3) => () => {
-  const [account, setAccount] = useState(null);
-
-  useEffect(() => {
-    const getAccount = async () => {
+export const handler = (web3, provider) => () => {
+  const { mutate, ...swrResponse } = useSWR(
+    () => (web3 ? "web3/accounts" : null),
+    async () => {
       const accounts = await web3.eth.getAccounts();
-      setAccount(accounts[0]);
-    };
-
-    web3 && getAccount();
-  }, [web3]);
+      return accounts[0];
+    }
+  );
 
   useEffect(() => {
-    window.ethereum &&
-      window.ethereum.on("accountsChanged", accounts =>
-        setAccount(accounts[0] ?? null)
-      );
-  }, []);
+    provider &&
+      provider.on("accountsChanged", (accounts) => mutate(accounts[0] ?? null));
+  }, [provider]);
 
-  return { account };
+  return {
+    account: {
+      mutate,
+      ...swrResponse,
+    },
+  };
 };

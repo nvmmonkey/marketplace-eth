@@ -44,7 +44,7 @@ export default function Navbar() {
                   Loading...
                 </Button>
               ) : isWeb3Loaded ? (
-                account ? (
+                account.data ? (
                   <Button className="cursor-default" hoverable={false}>
                     Hi there
                   </Button>
@@ -62,10 +62,10 @@ export default function Navbar() {
           </div>
         </nav>
       </div>
-      {account && 
+      {account.data && 
         <div className="flex justify-end pt-1 sm:px-6 lg:px-8">
           <div className="text-white bg-indigo-600 rounded-md p-2">
-            {account}
+            {account.data}
           </div>
         </div>
       }
