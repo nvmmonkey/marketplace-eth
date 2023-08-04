@@ -30,13 +30,10 @@ export const handler = (web3, provider) => () => {
   }, [web3]);
 
   return {
-    network: {
-      data,
-      hasFinishedFirstFetch: data || error,
-      mutate,
-      target: targetNetwork,
-      isSupported: data === targetNetwork,
-      ...rest,
-    },
+    data,
+    mutate,
+    target: targetNetwork,
+    isSupported: data == targetNetwork,
+    ...rest,
   };
 };

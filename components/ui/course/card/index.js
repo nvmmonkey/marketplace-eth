@@ -3,17 +3,15 @@ import Link from "next/link";
 
 export default function Card({ course }) {
   return (
-    <div
-
-      className="bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl"
-    >
+    <div className="bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
       <div className="flex h-full w-full">
-        <div className="flex w-full h-full ">
+        <div className="flex h-full w-full">
           <Image
             className="object-cover"
-            height="230"
-            width="200"
             src={course.coverImage}
+            layout="fixed"
+            width="200"
+            height="230"
             alt={course.title}
           />
         </div>
