@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useAccount } from "@components/hooks/web3";
 
 export default function Navbar() {
-  const { web3, connect, isLoading } = useWeb3();
+  const { requireInstall, connect, isLoading } = useWeb3();
   const { account } = useAccount();
   const { pathname } = useRouter();
 
@@ -46,20 +46,18 @@ export default function Navbar() {
                 <Button disabled={true} onClick={connect}>
                   Loading...
                 </Button>
-              ) : web3 != null ? (
-                account.data ? (
-                  <Button className="cursor-default" hoverable={false}>
-                    Hi there {account.isAdmin && "admin"}
-                  </Button>
-                ) : (
-                  <Button onClick={connect}>Connect</Button>
-                )
-              ) : (
+              ) : account.data ? (
+                <Button className="cursor-default" hoverable={false}>
+                  Hi there {account.isAdmin && "admin"}
+                </Button>
+              ) : requireInstall ? (
                 <Button
                   onClick={() => window.open("https://metamask.io/download/")}
                 >
                   Install Metamask
                 </Button>
+              ) : (
+                <Button onClick={connect}>Connect</Button>
               )}
             </div>
           </div>
