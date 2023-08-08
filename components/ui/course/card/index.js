@@ -1,18 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Card({ course }) {
+export default function Card({ course, Footer }) {
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
-      <div className="flex h-full w-full">
+      <div className="flex h-full w-full ">
         <div className="flex h-full w-full">
           <Image
             className="object-cover"
             src={course.coverImage}
-            layout="fixed"
             width="200"
             height="230"
             alt={course.title}
+            layout="fixed"
           />
         </div>
         <div className="p-8">
@@ -26,6 +26,7 @@ export default function Card({ course }) {
             {course.title}
           </Link>
           <p className="mt-2 text-gray-500">{course.description}</p>
+          {Footer && <Footer />}
         </div>
       </div>
     </div>
