@@ -4,7 +4,7 @@ const fetcher = async (url) => {
   const res = await fetch(url);
   const jsonData = await res.json();
 
-  return jsonData;
+  return jsonData.market_data.current_price.usd ?? null;
 };
 
 const URL =
@@ -17,5 +17,7 @@ export const useEthPrice = () => {
 
   //   return swrRes;
 
-  return useSWR(URL, fetcher);
+  const swrRes = useSWR(URL, fetcher, { refreshInterval: 1000 });
+
+  return { eth: { ...swrRes } };
 };
