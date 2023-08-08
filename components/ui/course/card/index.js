@@ -9,7 +9,6 @@ export default function Card({ course, Footer }) {
           <Image
             className="object-cover"
             src={course.coverImage}
-            layout="fixed"
             width="200"
             height="230"
             alt={course.title}
