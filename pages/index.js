@@ -1,17 +1,16 @@
-import { CourseList, CoursCard } from "@components/ui/course";
+import { CourseList, CourseCard } from "@components/ui/course";
 import { Hero } from "@components/ui/common";
 import { BaseLayout } from "@components/ui/layout";
 import { getAllCourses } from "@content/courses/fetcher";
-import { useWeb3 } from "@components/providers";
 
 export default function Home({ courses }) {
-  const { web3, isLoading } = useWeb3();
-
   return (
     <>
       <Hero />
       <CourseList courses={courses}>
-        {(course) => <CoursCard key={course.id} course={course} />}
+        {(course) => {
+          return <CourseCard key={course.id} course={course} />;
+        }}
       </CourseList>
     </>
   );
@@ -22,7 +21,7 @@ export default function Home({ courses }) {
 //** ------------- */
 
 export function getStaticProps() {
-  const { data, courseMap } = getAllCourses();
+  const { data } = getAllCourses();
 
   return {
     props: {
