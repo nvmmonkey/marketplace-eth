@@ -16,18 +16,29 @@ contract CourseMarketPlace {
         State state; //1
     }
 
+    //mapping of the courseHash to Course data
+    mapping(bytes32 => Course) private ownedCourses;
+
+    //mapping of courseID to courseHash
+    mapping(uint => bytes32) private ownedCourseHash;
+
+    //number of all courses + id of the courses
+    uint private totalOwnedCourses;
+
     function purchaseCourse(
-        bytes16 courseId,
+        bytes16 courseId, //0x00000000000000000000000000003130
         bytes32 proof //assume proof is ==> 0x0000000000000000000000000000313000000000000000000000000000003130
-    ) external payable returns (bytes32) {
-        //course id - 10
-        //ascii to hex 10 is 31 30
-        //CourseId is 16 bytes in Hex:0x00000000000000000000000000003130
-        // 0x5B38Da6a701c568545dCfcB03FcB875f56beddC4
-        // pre-hash value = 000000000000000000000000000031305B38Da6a701c568545dCfcB03FcB875f56beddC4
-        // keccak256(pre-hash value) = c4eaa3558504e2baa2669001b43f359b8418b44a4477ff417b4b007d7cc86e37
-        //   IDE test hex output   - 0xc4eaa3558504e2baa2669001b43f359b8418b44a4477ff417b4b007d7cc86e37
+    ) external payable {
         bytes32 courseHash = keccak256(abi.encodePacked(courseId, msg.sender));
-        return courseHash;
+        uint id = totalOwnedCourses++;
+        
+        ownedCourseHash[id] = courseHash;
+        ownedCourses[courseHash] = Course({
+            id: id,
+            price: msg.value,
+            proof: proof,
+            owner: msg.sender,
+            state: State.Purchased
+        });
     }
 }
