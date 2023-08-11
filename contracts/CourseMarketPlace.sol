@@ -31,7 +31,7 @@ contract CourseMarketPlace {
     ) external payable {
         bytes32 courseHash = keccak256(abi.encodePacked(courseId, msg.sender));
         uint id = totalOwnedCourses++;
-        
+
         ownedCourseHash[id] = courseHash;
         ownedCourses[courseHash] = Course({
             id: id,
@@ -40,5 +40,19 @@ contract CourseMarketPlace {
             owner: msg.sender,
             state: State.Purchased
         });
+    }
+
+    function getCourseCount() external view returns (uint) {
+        return totalOwnedCourses;
+    }
+
+    function getCourseHashAtIndex(uint index) external view returns (bytes32) {
+        return ownedCourseHash[index];
+    }
+
+    function getCourseHashByHash(
+        bytes32 courseHash
+    ) external view returns (Course memory) {
+        return ownedCourses[courseHash];
     }
 }
