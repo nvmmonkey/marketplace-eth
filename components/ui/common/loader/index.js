@@ -9,7 +9,7 @@ export default function Loader({ size = "md" }) {
     <>
       <div className={`sk-circle ${SIZES[size]}`}>
         {Array.from({ length: 12 }).map((_, i) => (
-          <div id={`dot-${i}`} className={`sk-circle${i + 1} sk-child`}></div>
+          <div key={`dot-${i}`} className={`sk-circle${i + 1} sk-child`}></div>
         ))}
       </div>
     </>

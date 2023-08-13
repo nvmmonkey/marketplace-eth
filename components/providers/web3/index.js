@@ -29,6 +29,7 @@ export default function Web3Provider({ children }) {
       if (provider) {
         const web3 = new Web3(provider);
         const contract = loadContract("CourseMarketPlace", provider);
+        console.log(contract);
 
         setWeb3Api({
           provider: null,
@@ -62,7 +63,6 @@ export default function Web3Provider({ children }) {
             console.log(
               "Cannot connect to Metamask, try to reload your browser."
             ),
-      test: () => console.log("Helle World"),
     };
   }, [web3Api]);
 
