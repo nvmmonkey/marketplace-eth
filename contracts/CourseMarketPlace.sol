@@ -25,6 +25,12 @@ contract CourseMarketPlace {
     //number of all courses + id of the courses
     uint private totalOwnedCourses;
 
+    address payable private owner;
+
+    constructor() {
+        setContractOwner(msg.sender);
+    }
+
     /// Course has already a Owner!
     error CourseHasOwner();
 
@@ -64,9 +70,13 @@ contract CourseMarketPlace {
         return ownedCourses[courseHash];
     }
 
+    function setContractOwner(address newOwner) private {
+        owner = payable(newOwner);
+    }
+
     function hasCourseOwnership(
         bytes32 courseHash
     ) private view returns (bool) {
         return ownedCourses[courseHash].owner == msg.sender;
-    } 
+    }
 }
