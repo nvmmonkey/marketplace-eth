@@ -32,7 +32,7 @@ export default function Web3Provider({ children }) {
         console.log(contract);
 
         setWeb3Api({
-          provider: null,
+          provider,
           web3,
           contract,
           isLoading: false,
@@ -60,7 +60,7 @@ export default function Web3Provider({ children }) {
             }
           }
         : () =>
-            console.log(
+            console.error(
               "Cannot connect to Metamask, try to reload your browser."
             ),
     };
