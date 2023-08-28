@@ -19,12 +19,12 @@ export default function Card({ course, disabled, Footer }) {
             {course.type}
           </div>
           <Link
-            className="h-12 block mt-1 text-lg leading-tight font-medium text-black hover:underline"
+            className="h-12 block mt-1 text-sm sm:text-lg leading-tight font-medium text-black hover:underline"
             href={`/courses/${course.slug}`}
           >
             {course.title}
           </Link>
-          <p className="mt-2 text-gray-500">
+          <p className="mt-2 text-sm sm:text-base text-gray-500">
             {course.description.substring(0, 70)}...
           </p>
           {Footer && <Footer />}
