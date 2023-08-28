@@ -15,7 +15,7 @@ export default function Button({
   return (
     <button
       {...rest}
-      className={`disabled:opacity-50 disabled:cursor-not-allowed xs:px-8 xs:py-3 border rounded-md text-base font-medium mr-8 ${className} ${variants[variant]}`}
+      className={`disabled:opacity-50 disabled:cursor-not-allowed p-2 xs:px-8 xs:py-3 border rounded-md text-base font-medium mr-8 ${className} ${variants[variant]}`}
     >
       {children}
     </button>
