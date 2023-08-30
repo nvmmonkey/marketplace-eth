@@ -6,7 +6,23 @@ const TYPES = {
   danger: "red",
 };
 
-export default function Message({ children, type = "successs" }) {
+//fix for TailwindCSS and PurgeCSS removing unused styles, avoid using dynamic class
+const COLOR_CLASSES = {
+  green: {
+    bg: "bg-green-100",
+    text: "text-green-900",
+  },
+  yellow: {
+    bg: "bg-yellow-100",
+    text: "text-yellow-900",
+  },
+  red: {
+    bg: "bg-red-100",
+    text: "text-red-900",
+  },
+};
+
+export default function Message({ children, type = "success" }) {
   const [isDisplayed, setIsDisplayed] = useState(true);
 
   if (!isDisplayed) {
@@ -14,14 +30,15 @@ export default function Message({ children, type = "successs" }) {
   }
 
   const messageType = TYPES[type];
+  const colorClass = COLOR_CLASSES[messageType];
 
   return (
-    <div className={`bg-${messageType}-100 rounded-xl mb-3`}>
+    <div className={`${colorClass.bg} rounded-xl mb-3 `}>
       <div className="max-w-7xl mx-auto py-3 px-3 sm:px-3 lg:px-3">
         <div className="flex items-center justify-between flex-wrap">
           <div className="w-0 flex-1 flex items-center">
-            <p className={`ml-3 font-medium text-${messageType}-900 truncate`}>
-              <span className="hidden md:inline">{children}</span>
+            <p className={`${colorClass.text} ml-3 font-medium `}>
+              <span className="hidden md:inline ">{children}</span>
             </p>
           </div>
           <div className="order-2 flex-shrink-0 sm:order-3 sm:ml-3">
@@ -32,7 +49,7 @@ export default function Message({ children, type = "successs" }) {
             >
               <span className="sr-only">Dismiss</span>
               <svg
-                className={`h-6 w-6 text-${messageType}-900`}
+                className={`${colorClass.text} h-6 w-6`}
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
