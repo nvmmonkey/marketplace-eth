@@ -4,6 +4,7 @@ import { OwnedCourseCard } from "@components/ui/course";
 import { BaseLayout } from "@components/ui/layout";
 import { MarketHeader } from "@components/ui/marketplace";
 import { getAllCourses } from "@content/courses/fetcher";
+import Link from "next/link";
 import { useRouter } from "next/router";
 
 export default function OwnedCourses({ courses }) {
@@ -14,11 +15,22 @@ export default function OwnedCourses({ courses }) {
   return (
     <>
       <MarketHeader />
-
       <section className="grid grid-cols-1">
+        {ownedCourses.hasFinishedFirstFetch &&
+          (!ownedCourses.data || ownedCourses?.data.length === 0) && (
+            <div className="w-1/2">
+              <Message type="warning">
+                <div>You don't own any courses.</div>
+                <Link href="/marketplace" legacyBehavior>
+                  <a className="font-normal hover:underline">
+                    <i>Purchase Course</i>
+                  </a>
+                </Link>
+              </Message>
+            </div>
+          )}
         {ownedCourses.data?.map((course) => (
           <OwnedCourseCard key={course.id} course={course}>
-            {/* <Message type="success">My custom message!</Message> */}
             <Button
               onClick={() => {
                 router.push(`/courses/${course.slug}`);
