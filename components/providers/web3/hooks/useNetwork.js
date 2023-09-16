@@ -20,9 +20,7 @@ export const handler = (web3, provider) => () => {
       const chainId = await web3.eth.getChainId();
 
       if (!chainId) {
-        throw new Error(
-          "Cannot retreive network, please refresh the browser!"
-        );
+        throw new Error("Cannot retreive network, please refresh the browser!");
       }
 
       return NETWORKS[chainId];
@@ -30,11 +28,13 @@ export const handler = (web3, provider) => () => {
   );
 
   useEffect(() => {
-    provider &&
-      provider.on("chainChanged", (chainId) =>
-        mutate(NETWORKS[parseInt(chainId, 16)])
-      );
-  }, [web3]);
+    const mutator = (chainId) => mutate(NETWORKS[parseInt(chainId, 16)]);
+    provider?.on("chainChanged", mutator);
+
+    return () => {
+      provider?.removeListener("chainChanged", mutator);
+    };
+  }, [provider]);
 
   return {
     data,
