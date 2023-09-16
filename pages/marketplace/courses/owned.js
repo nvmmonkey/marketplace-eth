@@ -1,4 +1,5 @@
 import { useAccount, useOwnedCourses } from "@components/hooks/web3";
+import { useWeb3 } from "@components/providers";
 import { Button, Message } from "@components/ui/common";
 import { OwnedCourseCard } from "@components/ui/course";
 import { BaseLayout } from "@components/ui/layout";
@@ -9,6 +10,7 @@ import { useRouter } from "next/router";
 
 export default function OwnedCourses({ courses }) {
   const { account } = useAccount();
+  const { requireInstall } = useWeb3();
   const router = useRouter();
   const { ownedCourses } = useOwnedCourses(courses, account.data);
 
@@ -25,6 +27,20 @@ export default function OwnedCourses({ courses }) {
                   <i className="opacity-50">Purchase Course Here</i>
                 </a>
               </Link>
+            </Message>
+          </div>
+        )}
+        {account.isEmpty && (
+          <div className="w-1/2">
+            <Message type="warning">
+              <div>Please connect to Metamask.</div>
+            </Message>
+          </div>
+        )}
+        {requireInstall && (
+          <div className="w-1/2">
+            <Message type="warning">
+              <div>Please Install Metamask.</div>
             </Message>
           </div>
         )}
