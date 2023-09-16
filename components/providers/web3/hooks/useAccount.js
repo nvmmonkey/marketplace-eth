@@ -23,8 +23,12 @@ export const handler = (web3, provider) => () => {
   );
 
   useEffect(() => {
+    console.log("SUBSCRIBTING");
     provider &&
-      provider.on("accountsChanged", (accounts) => mutate(accounts[0] ?? null));
+      provider.on("accountsChanged", (accounts) => {
+        console.log("ON ACCOUNT DATA");
+        mutate(accounts[0] ?? null)});
+        console.log(provider);
   }, [provider]);
 
   return {
