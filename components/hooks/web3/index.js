@@ -1,9 +1,22 @@
 import { useHooks } from "@components/providers/web3";
 
+const _isEmpty = (data) => {
+  return (
+    data == null ||
+    data == "" ||
+    (Array.isArray(data) && data.length === 0) ||
+    (data.constructor === Object && Object.keys(data).length === 0)
+  );
+};
+
 const enhanceHook = (swrRes) => {
+  const { data, error } = swrRes;
+  const hasFinishedFirstFetch = !!(data || error);
+  const isEmpty = hasFinishedFirstFetch && _isEmpty(data);
   return {
     ...swrRes,
-    hasFinishedFirstFetch: swrRes.data || swrRes.error,
+    isEmpty,
+    hasFinishedFirstFetch,
   };
 };
 
@@ -22,7 +35,9 @@ export const useAccount = () => {
 };
 
 export const useOwnedCourses = (...args) => {
-  const swrRes = enhanceHook(useHooks((hooks) => hooks.useOwnedCourses)(...args));
+  const swrRes = enhanceHook(
+    useHooks((hooks) => hooks.useOwnedCourses)(...args)
+  );
 
   return {
     ownedCourses: swrRes,
@@ -30,7 +45,9 @@ export const useOwnedCourses = (...args) => {
 };
 
 export const useOwnedCourse = (...args) => {
-  const swrRes = enhanceHook(useHooks((hooks) => hooks.useOwnedCourse)(...args));
+  const swrRes = enhanceHook(
+    useHooks((hooks) => hooks.useOwnedCourse)(...args)
+  );
 
   return {
     ownedCourse: swrRes,

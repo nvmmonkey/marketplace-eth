@@ -16,19 +16,18 @@ export default function OwnedCourses({ courses }) {
     <>
       <MarketHeader />
       <section className="grid grid-cols-1">
-        {ownedCourses.hasFinishedFirstFetch &&
-          (!ownedCourses.data || ownedCourses?.data.length === 0) && (
-            <div className="w-1/2">
-              <Message type="warning">
-                <div>You don't own any courses.</div>
-                <Link href="/marketplace" legacyBehavior>
-                  <a className="font-normal hover:underline">
-                    <i>Purchase Course</i>
-                  </a>
-                </Link>
-              </Message>
-            </div>
-          )}
+        {ownedCourses.isEmpty && (
+          <div className="w-1/2">
+            <Message type="warning">
+              <div>You don't own any courses.</div>
+              <Link href="/marketplace" legacyBehavior>
+                <a className="font-normal hover:underline">
+                  <i className="opacity-50">Purchase Course Here</i>
+                </a>
+              </Link>
+            </Message>
+          </div>
+        )}
         {ownedCourses.data?.map((course) => (
           <OwnedCourseCard key={course.id} course={course}>
             <Button
