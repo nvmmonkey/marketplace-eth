@@ -1,6 +1,7 @@
+import { Loader } from "@components/ui/common";
 import Link from "next/link";
 
-export default function Curriculum({ locked, courseState }) {
+export default function Curriculum({ locked, courseState, isLoading }) {
   const lectures = [
     "How to init App",
     "How to get a help",
@@ -63,7 +64,9 @@ export default function Curriculum({ locked, courseState }) {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        {locked ? (
+                        {isLoading ? (
+                          <Loader size="sm" className="m-0 p-0"/>
+                        ) : locked ? (
                           <>
                             {courseState === "deactivated" && (
                               <Link

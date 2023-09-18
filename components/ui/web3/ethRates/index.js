@@ -15,8 +15,8 @@ export default function EthRates() {
               <span className="text-xl font-bold"> = {eth.data}$</span>
             </>
           ) : (
-            <div className="w-full flex justify-center">
-              <Loader size="md" />
+            <div className=" flex justify-center">
+              <Loader size="sm" />
             </div>
           )}
         </div>
