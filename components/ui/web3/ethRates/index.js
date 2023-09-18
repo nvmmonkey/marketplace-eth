@@ -11,7 +11,7 @@ export default function EthRates() {
         <div className="flex items-center">
           {eth.data ? (
             <>
-              <Image height="35" width="35" src="/small-eth.webp" />
+              <Image height="35" width="35" src="/small-eth.webp" alt="ethLogo"/>
               <span className="text-xl font-bold"> = {eth.data}$</span>
             </>
           ) : (
@@ -28,7 +28,7 @@ export default function EthRates() {
           <span className="text-xl font-bold ">{eth.perItem}</span>
           {eth.data ? (
             <>
-              <Image height="35" width="35" src="/small-eth.webp" />
+              <Image height="35" width="35" src="/small-eth.webp" alt="ethLogo"/>
               <span className="text-2xl font-bolds"> = ${COURSE_PRICE}</span>
             </>
           ) : (

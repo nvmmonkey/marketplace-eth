@@ -1,13 +1,15 @@
 import { handler as createAccountHook } from "./useAccount";
 import { handler as createNetworkHook } from "./useNetwork";
-import { handler as useOwnedCoursesHook } from "./useOwnedCourses";
-import { handler as useOwnedCourseHook } from "./useOwedCourse";
+import { handler as createOwnedCourseHook } from "./useOwedCourse";
+import { handler as createOwnedCoursesHook } from "./useOwnedCourses";
+import { handler as createManagedCoursesHook } from "./useManagedCourses";
 
 export const setupHooks = ({ web3, provider, contract }) => {
   return {
     useAccount: createAccountHook(web3, provider),
     useNetwork: createNetworkHook(web3, provider),
-    useOwnedCourses: useOwnedCoursesHook(web3, contract),
-    useOwnedCourse: useOwnedCourseHook(web3, contract),
+    useOwnedCourse: createOwnedCourseHook(web3, contract),
+    useOwnedCourses: createOwnedCoursesHook(web3, contract),
+    useManagedCourses: createManagedCoursesHook(web3, contract),
   };
 };
