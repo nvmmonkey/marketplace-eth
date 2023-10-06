@@ -8,7 +8,7 @@ export default function ManageCourses() {
   const { account } = useAccount();
   const { managedCourses } = useManagedCourses(account.data);
 
-  // console.log(managedCourses.data);
+  console.log(managedCourses.data);
   return (
     <>
       <div className="py-4">
