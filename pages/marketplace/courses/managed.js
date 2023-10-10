@@ -10,10 +10,35 @@ import { BaseLayout } from "@components/ui/layout";
 import { MarketHeader } from "@components/ui/marketplace";
 import { useState } from "react";
 
+const VerficationInput = ({ onVerify }) => {
+  const [email, setEmail] = useState("");
+
+  return (
+    <div className="flex mr-2 relative rounded-md">
+      <input
+        value={email}
+        onChange={({ target: { value } }) => setEmail(value)}
+        type="text"
+        name="account"
+        id="account"
+        className="w-96 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md"
+        placeholder="0x2341ab..."
+      />
+      <Button
+        onClick={() => {
+          onVerify(email);
+        }}
+      >
+        Verify
+      </Button>
+    </div>
+  );
+};
+
 export default function ManagedCourses() {
   const { web3 } = useWeb3();
   const [proofedOwnership, setProofedOwnership] = useState({});
-  const [email, setEmail] = useState("");
+
   const { account } = useAccount();
   const { managedCourses } = useManagedCourses(account.data);
 
@@ -25,8 +50,8 @@ export default function ManagedCourses() {
     );
 
     proofToCheck === proof
-      ? setProofedOwnership({ [hash]: true })
-      : setProofedOwnership({ [hash]: false });
+      ? setProofedOwnership({ ...proofedOwnership, [hash]: true })
+      : setProofedOwnership({ ...proofedOwnership, [hash]: false });
   };
 
   return (
@@ -39,27 +64,14 @@ export default function ManagedCourses() {
         {managedCourses.data?.map((course) => {
           return (
             <ManagedCourseCard key={course.ownedCourseId} course={course}>
-              <div className="flex mr-2 relative rounded-md">
-                <input
-                  value={email}
-                  onChange={({ target: { value } }) => setEmail(value)}
-                  type="text"
-                  name="account"
-                  id="account"
-                  className="w-96 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md"
-                  placeholder="0x2341ab..."
-                />
-                <Button
-                  onClick={() => {
-                    verifyCourse(email, {
-                      hash: course.hash,
-                      proof: course.proof,
-                    });
-                  }}
-                >
-                  Verify
-                </Button>
-              </div>
+              <VerficationInput
+                onVerify={(email) => {
+                  verifyCourse(email, {
+                    hash: course.hash,
+                    proof: course.proof,
+                  });
+                }}
+              />
               {proofedOwnership[course.hash] && (
                 <div className="mt-2">
                   <Message>Verified!</Message>
