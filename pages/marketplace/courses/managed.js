@@ -1,5 +1,6 @@
 import { useAccount, useManagedCourses } from "@components/hooks/web3";
-import { Button } from "@components/ui/common";
+import { useWeb3 } from "@components/providers";
+import { Button, Message } from "@components/ui/common";
 import {
   CourseFilter,
   ManagedCourseCard,
@@ -10,12 +11,22 @@ import { MarketHeader } from "@components/ui/marketplace";
 import { useState } from "react";
 
 export default function ManagedCourses() {
+  const { web3 } = useWeb3();
+  const [proofedOwnership, setProofedOwnership] = useState({});
   const [email, setEmail] = useState("");
   const { account } = useAccount();
   const { managedCourses } = useManagedCourses(account.data);
 
   const verifyCourse = (email, { hash, proof }) => {
-    console.log(email, hash, proof)
+    const emailHash = web3.utils.sha3(email);
+    const proofToCheck = web3.utils.soliditySha3(
+      { t: "bytes32", v: emailHash },
+      { t: "bytes32", v: hash }
+    );
+
+    proofToCheck === proof
+      ? setProofedOwnership({ [hash]: true })
+      : setProofedOwnership({ [hash]: false });
   };
 
   return (
@@ -49,6 +60,16 @@ export default function ManagedCourses() {
                   Verify
                 </Button>
               </div>
+              {proofedOwnership[course.hash] && (
+                <div className="mt-2">
+                  <Message>Verified!</Message>
+                </div>
+              )}
+              {proofedOwnership[course.hash] === false && (
+                <div className="mt-2">
+                  <Message type="danger">Wrong Proof!</Message>
+                </div>
+              )}
             </ManagedCourseCard>
           );
         })}
