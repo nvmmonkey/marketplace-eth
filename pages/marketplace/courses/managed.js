@@ -1,4 +1,8 @@
-import { useAccount, useManagedCourses } from "@components/hooks/web3";
+import {
+  useAccount,
+  useAdmin,
+  useManagedCourses,
+} from "@components/hooks/web3";
 import { useWeb3 } from "@components/providers";
 import { Button, Message } from "@components/ui/common";
 import {
@@ -39,7 +43,7 @@ export default function ManagedCourses() {
   const { web3 } = useWeb3();
   const [proofedOwnership, setProofedOwnership] = useState({});
 
-  const { account } = useAccount();
+  const { account } = useAdmin({ redirectTo: "/marketplace" });
   const { managedCourses } = useManagedCourses(account);
 
   const verifyCourse = (email, { hash, proof }) => {
@@ -53,6 +57,10 @@ export default function ManagedCourses() {
       ? setProofedOwnership({ ...proofedOwnership, [hash]: true })
       : setProofedOwnership({ ...proofedOwnership, [hash]: false });
   };
+
+  if (!account.isAdmin) {
+    return null;
+  }
 
   return (
     <>
