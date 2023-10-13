@@ -14,6 +14,17 @@ import { BaseLayout } from "@components/ui/layout";
 import { MarketHeader } from "@components/ui/marketplace";
 import { useState } from "react";
 
+//BEFORE TX BALANCE -  90781604576224587420 - 90.78160457622458742 ETH
+//GAS 139809 * 1000000008 = 139809001118472 wei => 0.000139809001118472 ETH
+// GAS +  VALUE SNED = 0.000139809001118472 + 1 = 1.000139809001118472
+
+//AFTER TX(calculation) -> 89.7814647672 ETH 
+//AFTER TX BALANCE from web3.utils.getBalance() = 89781464767223468948 => 89.781464767223468948 ETH
+// MATCHING    89.**7814647672** 
+//             89.**7814647672**23468948
+// Deactivate  90.**7814647672**23468948
+
+
 const VerficationInput = ({ onVerify }) => {
   const [email, setEmail] = useState("");
 
@@ -62,14 +73,20 @@ export default function ManagedCourses() {
     return null;
   }
 
-  const activateCourse = async (courseHash) => {
+  const changeCourseState = async (courseHash, method) => {
     try {
-      await contract.methods
-        .activateCourse(courseHash)
-        .send({ from: account.data });
+      await contract.methods[method](courseHash).send({ from: account.data });
     } catch (e) {
       console.error(e.message);
     }
+  };
+
+  const activateCourse = async (courseHash) => {
+    changeCourseState(courseHash, "activateCourse");
+  };
+
+  const deactivateCourse = async (courseHash) => {
+    changeCourseState(courseHash, "deactivateCourse");
   };
 
   return (
@@ -111,7 +128,14 @@ export default function ManagedCourses() {
                   >
                     Activate
                   </Button>
-                  <Button variant="red">Deactivate</Button>
+                  <Button
+                    onClick={() => {
+                      deactivateCourse(course.hash);
+                    }}
+                    variant="red"
+                  >
+                    Deactivate
+                  </Button>
                 </div>
               )}
             </ManagedCourseCard>
