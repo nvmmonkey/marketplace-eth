@@ -203,11 +203,15 @@ contract("CourseMarketPlace", (accounts) => {
 
     it("should be able repurchase with the original buyer", async () => {
       const beforeTxBuyerBalance = await getBalance(buyer);
+      const beforeTxContractBalance = await getBalance(_contract.address);
+
       const result = await _contract.repurchaseCourse(courseHash2, {
         from: buyer,
         value,
       });
+
       const afterTxBuyerBalance = await getBalance(buyer);
+      const afterTxContractBalance = await getBalance(_contract.address);
 
       const course = await _contract.getCourseHashByHash(courseHash2);
       const expectedState = 0;
@@ -228,6 +232,12 @@ contract("CourseMarketPlace", (accounts) => {
         toBN(beforeTxBuyerBalance).sub(toBN(value)).sub(gas).toString(),
         afterTxBuyerBalance,
         "Client balance is not correct!"
+      );
+
+      assert.equal(
+        toBN(beforeTxContractBalance).add(toBN(value)).toString(),
+        afterTxContractBalance,
+        "Contract balance is not correct!"
       );
     });
 
