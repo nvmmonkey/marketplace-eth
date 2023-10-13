@@ -9,7 +9,7 @@ const LINKS = [
   },
   {
     href: "/marketplace/courses/owned",
-    value: "My Course",
+    value: "My Courses",
   },
   {
     href: "/marketplace/courses/managed",
