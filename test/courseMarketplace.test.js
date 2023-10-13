@@ -12,6 +12,7 @@ contract("CourseMarketPlace", (accounts) => {
   let _contract = null;
   let contractOwner = null;
   let buyer = null;
+  let courseHash = null;
 
   before(async () => {
     _contract = await CourseMarketplace.deployed();
@@ -24,8 +25,6 @@ contract("CourseMarketPlace", (accounts) => {
   });
 
   describe("Purchase the new course", () => {
-    let courseHash;
-
     before(async () => {
       await _contract.purchaseCourse(courseId, proof, { from: buyer, value });
     });
@@ -52,13 +51,30 @@ contract("CourseMarketPlace", (accounts) => {
       const course = await _contract.getCourseHashByHash(courseHash);
 
       assert.equal(course.id, expectedIndex, "Course index should be 0!");
-      assert.equal(course.price, value, `Course pricce should be ${value}!`);
+      assert.equal(course.price, value, `Course price should be ${value}!`);
       assert.equal(course.proof, proof, `Course proof should be ${proof}!`);
       assert.equal(course.owner, buyer, `Course owner should be ${buyer}!`);
       assert.equal(
         course.state,
         expectedState,
         `Course state should be ${expectedState}!`
+      );
+    });
+  });
+
+  describe("Activate the purchased course", () => {
+    before(async () => {
+      await _contract.activateCourse(courseHash, { from: contractOwner });
+    });
+
+    it("should have activated status", async () => {
+      const course = await _contract.getCourseHashByHash(courseHash);
+      const expectedState = 1;
+
+      assert.equal(
+        course.state,
+        expectedState,
+        "Course should have 'activated' state!"
       );
     });
   });
