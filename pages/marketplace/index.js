@@ -81,9 +81,20 @@ export default function Marketplace({ courses }) {
               if (owned) {
                 return (
                   <>
-                    <Button variant="green" disabled={true}>
-                      Owned
-                    </Button>
+                    <div>
+                      <Button variant="green" disabled={true}>
+                        Owned
+                      </Button>
+                      {owned.state === "deactivated" && (
+                        <Button
+                          variant="purple"
+                          onClick={() => alert("Re-activating!")}
+                          disabled={false}
+                        >
+                          Fund to Activate
+                        </Button>
+                      )}
+                    </div>
                     <div className="mt-1">
                       {owned.state === "activated" && (
                         <Message size="sm">Activated</Message>
