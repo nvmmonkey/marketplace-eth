@@ -74,6 +74,7 @@ export default function Marketplace({ courses }) {
 
                 if (!ownedCourses.hasFinishedFirstFetch) {
                   return (
+                    // <div style={{ height: "42px" }}></div>
                     <Button variant="lightPurple" disabled={true}>
                       <Loader size="sm" />
                     </Button>
@@ -83,9 +84,16 @@ export default function Marketplace({ courses }) {
                 if (owned) {
                   return (
                     <>
-                      <div>
-                        <Button size="sm" variant="green" disabled={true}>
-                          Owned
+                      <div className="flex">
+                        <Button
+                          onClick={() =>
+                            alert("You are the owner of this course!")
+                          }
+                          size="sm"
+                          variant="white"
+                          disabled={false}
+                        >
+                          Yours &#10003;
                         </Button>
                         {owned.state === "deactivated" && (
                           <Button
