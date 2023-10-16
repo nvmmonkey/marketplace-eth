@@ -65,7 +65,7 @@ export default function Curriculum({ locked, courseState, isLoading }) {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         {isLoading ? (
-                          <Loader size="sm" className="m-0 p-0"/>
+                          <Loader size="sm" className="m-0 p-0" />
                         ) : locked ? (
                           <>
                             {courseState === "deactivated" && (
