@@ -24,18 +24,38 @@ export default function Marketplace({ courses }) {
       { type: "address", value: account.data }
     );
 
-    const emailHash = web3.utils.sha3(order.email);
-    const proof = web3.utils.soliditySha3(
-      { t: "bytes32", v: emailHash },
-      { t: "bytes32", v: orderHash }
-    );
-
     const value = web3.utils.toWei(String(order.price));
-    console.log({ hexCourseId, orderHash, emailHash, proof, value });
 
+    if (isNewPurchase) {
+      const emailHash = web3.utils.sha3(order.email);
+      const proof = web3.utils.soliditySha3(
+        { t: "bytes32", v: emailHash },
+        { t: "bytes32", v: orderHash }
+      );
+
+      _purchaseCourse(hexCourseId, proof, value);
+      console.log({ hexCourseId, orderHash, emailHash, proof, value });
+    } else {
+      _repurchaseCourse(orderHash, value);
+    }
+  };
+
+  const _purchaseCourse = async (hexCourseId, proof, value) => {
     try {
       const res = await contract.methods
         .purchaseCourse(hexCourseId, proof)
+        .send({ from: account.data, value });
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+      console.error("Purhcase Course: Operation has failed!");
+    }
+  };
+
+  const _repurchaseCourse = async (courseHash, value) => {
+    try {
+      const res = await contract.methods
+        .repurchaseCourse(courseHash)
         .send({ from: account.data, value });
       console.log(res);
     } catch (err) {
