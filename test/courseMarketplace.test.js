@@ -301,4 +301,44 @@ contract("CourseMarketPlace", (accounts) => {
       );
     });
   });
+
+  describe("Normal withdraw", () => {
+    const fundsToDeposit = "100000000000000000";
+    const overLimitFunds = "99999999900000000000000";
+    let currentOwner = null;
+
+    before(async () => {
+      currentOwner = await _contract.getContractOwner();
+      await web3.eth.sendTransaction({
+        from: buyer,
+        to: _contract.address,
+        value: fundsToDeposit,
+      });
+    });
+
+    it("should fail when withdrawing with NOT owner address", async () => {
+      const value = "10000000000000000";
+      await catchRevert(_contract.withdraw(value, { from: buyer }));
+    });
+
+    it("should fail when withdrawing with OVER limit balance", async () => {
+      await catchRevert(_contract.withdraw(overLimitFunds, { from: buyer }));
+    });
+
+    it("should has +0.1ETH after withdraw", async () => {
+      const ownerBalance = await getBalance(currentOwner);
+      const result = await _contract.withdraw(fundsToDeposit, {
+        from: currentOwner,
+      });
+      const nweOwnerBalance = await getBalance(currentOwner);
+
+      const gas = await getGas(result);
+
+      assert.equal(
+        toBN(ownerBalance).add(toBN(fundsToDeposit)).sub(toBN(gas)).toString(),
+        nweOwnerBalance,
+        "The new onwer balance is not correct!"
+      );
+    });
+  });
 });
