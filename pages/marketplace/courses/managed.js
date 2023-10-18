@@ -60,6 +60,9 @@ export default function ManagedCourses() {
   const { managedCourses } = useManagedCourses(account);
 
   const verifyCourse = (email, { hash, proof }) => {
+    if (!email) {
+      return;
+    }
     const emailHash = web3.utils.sha3(email);
     const proofToCheck = web3.utils.soliditySha3(
       { t: "bytes32", v: emailHash },
@@ -186,7 +189,7 @@ export default function ManagedCourses() {
 
         <h1 className="text-2xl p-5 font-bold">All Courses</h1>
         {filteredCourses}
-        {filteredCourses.length === 0 && (
+        {filteredCourses?.length === 0 && (
           <Message type="warning">No Courses to display</Message>
         )}
       </section>
