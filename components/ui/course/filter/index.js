@@ -1,17 +1,22 @@
 import { Button } from "@components/ui/common";
+import { useState } from "react";
 
-export default function CourseFilter() {
+export default function CourseFilter({ onSearchSubmit }) {
+  const [searchText, setSearchText] = useState("");
+
   return (
     <div className=" flex flex-col md:flex-row items-center my-4">
       <div className="flex mr-2 relative rounded-md ">
         <input
+          onChange={({ target: { value } }) => setSearchText(value)}
+          value={searchText}
           type="text"
-          name="account"
-          id="account"
+          name="courseHash"
+          id="courseHash"
           className="w-52 sm:w-96 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md"
           placeholder="0x2341ab..."
         />
-        <Button>Search</Button>
+        <Button onClick={() => onSearchSubmit(searchText)}>Search</Button>
       </div>
       <div className="relative text-gray-700">
         <select

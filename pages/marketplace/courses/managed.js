@@ -18,12 +18,11 @@ import { useState } from "react";
 //GAS 139809 * 1000000008 = 139809001118472 wei => 0.000139809001118472 ETH
 // GAS +  VALUE SNED = 0.000139809001118472 + 1 = 1.000139809001118472
 
-//AFTER TX(calculation) -> 89.7814647672 ETH 
+//AFTER TX(calculation) -> 89.7814647672 ETH
 //AFTER TX BALANCE from web3.utils.getBalance() = 89781464767223468948 => 89.781464767223468948 ETH
-// MATCHING    89.**7814647672** 
+// MATCHING    89.**7814647672**
 //             89.**7814647672**23468948
 // Deactivate  90.**7814647672**23468948
-
 
 const VerficationInput = ({ onVerify }) => {
   const [email, setEmail] = useState("");
@@ -89,11 +88,18 @@ export default function ManagedCourses() {
     changeCourseState(courseHash, "deactivateCourse");
   };
 
+  const searchCourse = courseHash => {
+    if(!courseHash){
+      return 
+    }
+    alert(courseHash);
+  };
+
   return (
     <>
       <div className="py-4">
         <MarketHeader />
-        <CourseFilter />
+        <CourseFilter onSearchSubmit={searchCourse} />
       </div>
       <section className="grid grid-cols-1">
         {managedCourses.data?.map((course) => {
