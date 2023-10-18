@@ -153,13 +153,19 @@ export default function ManagedCourses() {
     );
   };
 
-  useEffect(() => {
-    console.log(filters);
-  }, [filters]);
-
   if (!account.isAdmin) {
     return null;
   }
+
+  const filteredCourses = managedCourses.data
+    ?.filter((course) => {
+      if (filters.state === "all") {
+        return true;
+      }
+
+      return course.state === filters.state;
+    })
+    .map((course) => renderCard(course));
 
   return (
     <>
@@ -171,10 +177,18 @@ export default function ManagedCourses() {
         />
       </div>
       <section className="grid grid-cols-1">
-        <h1 className="text-2xl p-5 font-bold">Search Result</h1>
-        {searchedCourse && <div>{renderCard(searchedCourse, true)}</div>}
+        {searchedCourse && (
+          <>
+            <h1 className="text-2xl p-5 font-bold">Search Result</h1>
+            <div>{renderCard(searchedCourse, true)}</div>
+          </>
+        )}
+
         <h1 className="text-2xl p-5 font-bold">All Courses</h1>
-        {managedCourses.data?.map((course) => renderCard(course))}
+        {filteredCourses}
+        {filteredCourses.length === 0 && (
+          <Message type="warning">No Courses to display</Message>
+        )}
       </section>
     </>
   );
