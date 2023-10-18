@@ -70,10 +70,6 @@ export default function ManagedCourses() {
       : setProofedOwnership({ ...proofedOwnership, [hash]: false });
   };
 
-  if (!account.isAdmin) {
-    return null;
-  }
-
   const changeCourseState = async (courseHash, method) => {
     try {
       await contract.methods[method](courseHash).send({ from: account.data });
@@ -106,6 +102,60 @@ export default function ManagedCourses() {
     setSearchedCourse(null);
   };
 
+  const renderCard = (course, isSearched) => {
+    return (
+      <ManagedCourseCard
+        key={course.ownedCourseId}
+        course={course}
+        isSearched={isSearched}
+      >
+        <VerficationInput
+          onVerify={(email) => {
+            verifyCourse(email, {
+              hash: course.hash,
+              proof: course.proof,
+            });
+          }}
+        />
+        {proofedOwnership[course.hash] && (
+          <div className="mt-2">
+            <Message>Verified!</Message>
+          </div>
+        )}
+        {proofedOwnership[course.hash] === false && (
+          <div className="mt-2">
+            <Message type="danger">Wrong Proof!</Message>
+          </div>
+        )}
+
+        {course.state === "purchased" && (
+          <div className="mt-2">
+            <Button
+              onClick={() => {
+                activateCourse(course.hash);
+              }}
+              variant="green"
+            >
+              Activate
+            </Button>
+            <Button
+              onClick={() => {
+                deactivateCourse(course.hash);
+              }}
+              variant="red"
+            >
+              Deactivate
+            </Button>
+          </div>
+        )}
+      </ManagedCourseCard>
+    );
+  };
+
+  if (!account.isAdmin) {
+    return null;
+  }
+
   return (
     <>
       <div className="py-4">
@@ -113,51 +163,10 @@ export default function ManagedCourses() {
         <CourseFilter onSearchSubmit={searchCourse} />
       </div>
       <section className="grid grid-cols-1">
-        {managedCourses.data?.map((course) => {
-          return (
-            <ManagedCourseCard key={course.ownedCourseId} course={course}>
-              <VerficationInput
-                onVerify={(email) => {
-                  verifyCourse(email, {
-                    hash: course.hash,
-                    proof: course.proof,
-                  });
-                }}
-              />
-              {proofedOwnership[course.hash] && (
-                <div className="mt-2">
-                  <Message>Verified!</Message>
-                </div>
-              )}
-              {proofedOwnership[course.hash] === false && (
-                <div className="mt-2">
-                  <Message type="danger">Wrong Proof!</Message>
-                </div>
-              )}
-
-              {course.state === "purchased" && (
-                <div className="mt-2">
-                  <Button
-                    onClick={() => {
-                      activateCourse(course.hash);
-                    }}
-                    variant="green"
-                  >
-                    Activate
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      deactivateCourse(course.hash);
-                    }}
-                    variant="red"
-                  >
-                    Deactivate
-                  </Button>
-                </div>
-              )}
-            </ManagedCourseCard>
-          );
-        })}
+        <h1 className="text-2xl p-5 font-bold">Search Result</h1>
+        {searchedCourse && <div>{renderCard(searchedCourse, true)}</div>}
+        <h1 className="text-2xl p-5 font-bold">All Courses</h1>
+        {managedCourses.data?.map((course) => renderCard(course))}
       </section>
     </>
   );

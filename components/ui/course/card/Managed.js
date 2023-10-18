@@ -11,22 +11,29 @@ const Item = ({ title, value, className }) => {
   );
 };
 
-export default function ManagedCourseCard({ children, course }) {
+export default function ManagedCourseCard({
+  children,
+  course,
+  isSearched = false,
+}) {
   return (
-    <div className="bg-white border shadow overflow-hidden xs:rounded-lg mb-3">
-      <div className="border-t border-gray-200">
-        {Object.keys(course).map((key, i) => (
-          <Item
-            className={`${i % 2 ? "bg-white " : "bg-gray-50"}`}
-            key={key}
-            // title={key}
-            title={key[0].toUpperCase() + key.slice(1)}
-            value={course[key]}
-          />
-        ))}
+    <div
+      className={`${
+        isSearched
+          ? "border-indigo-700 shadow-lg shadow-indigo-200 "
+          : "bg-gray-200"
+      } bg-white border shadow overflow-hidden xs:rounded-lg mb-3`}
+    >
+      {Object.keys(course).map((key, i) => (
+        <Item
+          className={`${i % 2 ? "bg-white " : "bg-gray-50"}`}
+          key={key}
+          title={key[0].toUpperCase() + key.slice(1)}
+          value={course[key]}
+        />
+      ))}
 
-        <div className="bg-white px-4 py-3 xs:px-6">{children}</div>
-      </div>
+      <div className="bg-white px-4 py-3 xs:px-6">{children}</div>
     </div>
   );
 }
