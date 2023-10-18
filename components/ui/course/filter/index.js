@@ -1,7 +1,9 @@
 import { Button } from "@components/ui/common";
 import { useState } from "react";
 
-export default function CourseFilter({ onSearchSubmit }) {
+const OPTIONS = ["all", "purchased", "activated", "deactivated"];
+
+export default function CourseFilter({ onSearchSubmit,onFilterSelect }) {
   const [searchText, setSearchText] = useState("");
 
   return (
@@ -22,10 +24,13 @@ export default function CourseFilter({ onSearchSubmit }) {
         <select
           className="w-72 h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:shadow-outline"
           placeholder="Regular input"
+          onChange={({target:{value}})=>onFilterSelect(value)}
         >
-          <option>A regular sized select input</option>
-          <option>Another option</option>
-          <option>And one more</option>
+          {OPTIONS.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
         </select>
         <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
           <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
