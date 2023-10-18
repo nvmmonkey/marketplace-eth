@@ -335,10 +335,46 @@ contract("CourseMarketPlace", (accounts) => {
       const gas = await getGas(result);
 
       assert.equal(
-        toBN(ownerBalance).add(toBN(fundsToDeposit)).sub(toBN(gas)).toString(),
+        toBN(ownerBalance).add(toBN(fundsToDeposit)).sub(gas).toString(),
         nweOwnerBalance,
         "The new onwer balance is not correct!"
       );
+    });
+  });
+
+  describe("Emergency withdraw", () => {
+    let currentOwner;
+
+    before(async () => {
+      currentOwner = await _contract.getContractOwner();
+    });
+
+    it("should fail when contract is NOT stopped", async () => {
+      await catchRevert(_contract.emergencyWithdraw({ from: currentOwner }));
+    });
+
+    it("should have +contract funds on contract owner", async () => {
+      await _contract.stopContract({ from: contractOwner });
+
+      const contractBal = await getBalance(_contract.address);
+      const ownerBal = await getBalance(currentOwner);
+
+      const result = await _contract.emergencyWithdraw({ from: currentOwner });
+      const gas = await getGas(result);
+
+      const newOwnerBal = await getBalance(currentOwner);
+
+      assert.equal(
+        toBN(ownerBal).add(toBN(contractBal)).sub(gas),
+        newOwnerBal,
+        "Owner doesn't have contract balance"
+      );
+    });
+
+    it("should have contract balance of 0", async () => {
+      const contractBal = await getBalance(_contract.address);
+
+      assert.equal(contractBal, 0, "Contract doesn't have 0 balance");
     });
   });
 });
