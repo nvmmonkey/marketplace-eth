@@ -60,6 +60,31 @@ contract CourseMarketPlace {
         _;
     }
 
+    modifier onlyWhenStopped() {
+        require(isStopped);
+        _;
+    }
+
+    //receive eth from external for the contract
+    receive() external payable {}
+
+    // withdraw eth from contract
+    function withdraw(uint amount) external onlyOwner {
+        (bool success, ) = owner.call{value: amount}("");
+        require(success, "Transfer failed.");
+    }
+
+    //Emergency Withdraw all eth from contract
+    function emergencyWithdraw() external onlyWhenStopped onlyOwner {
+        (bool success, ) = owner.call{value: address(this).balance}("");
+        require(success, "Transfer failed.");
+    }
+
+    //Destroy contract
+    function selfDestruct() external onlyWhenStopped onlyOwner {
+        selfdestruct(owner); //destory contract and transfer to owner address
+    }
+
     function stopContract() external onlyOwner {
         isStopped = true;
     }
