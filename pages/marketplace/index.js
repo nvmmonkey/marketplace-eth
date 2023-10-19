@@ -34,10 +34,10 @@ export default function Marketplace({ courses }) {
         { t: "bytes32", v: orderHash }
       );
 
-      _purchaseCourse(hexCourseId, proof, value);
-      console.log({ hexCourseId, orderHash, emailHash, proof, value });
+      withToast(_purchaseCourse(hexCourseId, proof, value));
+      // console.log({ hexCourseId, orderHash, emailHash, proof, value });
     } else {
-      _repurchaseCourse(orderHash, value);
+      withToast(_repurchaseCourse(orderHash, value));
     }
   };
 
@@ -46,10 +46,10 @@ export default function Marketplace({ courses }) {
       const res = await contract.methods
         .purchaseCourse(hexCourseId, proof)
         .send({ from: account.data, value });
-      console.log(res);
+
+      return res;
     } catch (err) {
-      console.log(err);
-      console.error("Purhcase Course: Operation has failed!");
+      throw new Error(err.message);
     }
   };
 
@@ -58,34 +58,16 @@ export default function Marketplace({ courses }) {
       const res = await contract.methods
         .repurchaseCourse(courseHash)
         .send({ from: account.data, value });
-      console.log(res);
-    } catch (err) {
-      console.log(err);
-      console.error("Purhcase Course: Operation has failed!");
-    }
-  };
 
-  const notify = () => {
-    const resolveWithSomeData = new Promise((resolve) =>
-      setTimeout(
-        () =>
-          resolve({
-            transactionHash:
-              "0x07973be3b5bdae7a091e42ce9e208ec2fd0c3cf2ba02c51ce2a182bd3a92786a",
-          }),
-        3000
-      )
-    );
-    // const resolveWithSomeData = new Promise((resolve, reject) =>
-    //   setTimeout(() => reject(new Error("some error")), 3000)
-    // );
-    withToast(resolveWithSomeData);
+      return res;
+    } catch (err) {
+      throw new Error(err.message);
+    }
   };
 
   return (
     <>
       <MarketHeader />
-      <Button onClick={notify}>Notify!</Button>
 
       <CourseList courses={courses}>
         {(course) => {
