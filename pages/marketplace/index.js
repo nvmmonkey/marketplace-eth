@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useOwnedCourses, useWalletInfo } from "@components/hooks/web3";
 import { MarketHeader } from "@components/ui/marketplace";
 import { useWeb3 } from "@components/providers";
+import { toast } from "react-toastify";
 
 export default function Marketplace({ courses }) {
   const { web3, contract, requireInstall } = useWeb3();
@@ -64,9 +65,40 @@ export default function Marketplace({ courses }) {
     }
   };
 
+  const notify = () => {
+    // const resolveWithSomeData = new Promise((resolve) =>
+    //   setTimeout(() => resolve("world"), 3000)
+    // );
+    const resolveWithSomeData = new Promise((resolve, reject) =>
+      setTimeout(() => reject(new Error("some error")), 3000)
+    );
+    toast.promise(resolveWithSomeData, {
+      pending: {
+        render() {
+          return "I'm loading";
+        },
+        icon: true,
+      },
+      success: {
+        render({ data }) {
+          return `Hello ${data}`;
+        },
+        // other options
+        icon: "🟢",
+      },
+      error: {
+        render({ data }) {
+          // When the promise reject, data will contains the error
+          return <div>{data.message ?? "Transaction has failed"}</div>;
+        },
+      },
+    });
+  };
+
   return (
     <>
       <MarketHeader />
+      <Button onClick={notify}>Notify!</Button>
 
       <CourseList courses={courses}>
         {(course) => {
