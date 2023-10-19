@@ -349,6 +349,10 @@ contract("CourseMarketPlace", (accounts) => {
       currentOwner = await _contract.getContractOwner();
     });
 
+    after(async () => {
+      await _contract.resumeContract({ from: currentOwner });
+    });
+
     it("should fail when contract is NOT stopped", async () => {
       await catchRevert(_contract.emergencyWithdraw({ from: currentOwner }));
     });
@@ -375,6 +379,49 @@ contract("CourseMarketPlace", (accounts) => {
       const contractBal = await getBalance(_contract.address);
 
       assert.equal(contractBal, 0, "Contract doesn't have 0 balance");
+    });
+  });
+
+  describe("Self Destruct", () => {
+    let currentOwner;
+
+    before(async () => {
+      currentOwner = await _contract.getContractOwner();
+    });
+
+    it("should fail when contract is NOT stopped", async () => {
+      await catchRevert(_contract.selfDestruct({ from: currentOwner }));
+    });
+
+    it("should have +contract funds on contract owner", async () => {
+      await _contract.stopContract({ from: contractOwner });
+
+      const contractBal = await getBalance(_contract.address);
+      const ownerBal = await getBalance(currentOwner);
+
+      const result = await _contract.selfDestruct({ from: currentOwner });
+      const gas = await getGas(result);
+
+      const newOwnerBal = await getBalance(currentOwner);
+
+      assert.equal(
+        toBN(ownerBal).add(toBN(contractBal)).sub(gas),
+        newOwnerBal,
+        "Owner doesn't have contract balance"
+      );
+    });
+
+    it("should have contract balance of 0", async () => {
+      const contractBal = await getBalance(_contract.address);
+
+      assert.equal(contractBal, 0, "Contract doesn't have 0 balance");
+    });
+
+    it("should have 0x bytecode", async () => {
+      const code = await web3.eth.getCode(_contract.address);
+      console.log(code);
+
+      assert.equal(code, "0x", "Contract is not destroyed!");
     });
   });
 });
