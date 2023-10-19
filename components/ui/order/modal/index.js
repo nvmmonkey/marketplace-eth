@@ -209,7 +209,7 @@ export default function OrderModal({
           <Button
             disabled={formState.isDisabled}
             onClick={() => {
-              onSubmit(order);
+              onSubmit(order, course);
             }}
           >
             Submit

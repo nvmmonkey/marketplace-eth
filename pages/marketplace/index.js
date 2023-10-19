@@ -16,9 +16,10 @@ export default function Marketplace({ courses }) {
 
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [isNewPurchase, setIsNewPurchase] = useState(true);
+  const [busyCourseId, setBusyCourseId] = useState(null);
 
-  const purchaseCourse = async (order) => {
-    const hexCourseId = web3.utils.utf8ToHex(selectedCourse.id);
+  const purchaseCourse = async (order, course) => {
+    const hexCourseId = web3.utils.utf8ToHex(course.id);
 
     const orderHash = web3.utils.soliditySha3(
       { type: "bytes16", value: hexCourseId },
@@ -26,6 +27,8 @@ export default function Marketplace({ courses }) {
     );
 
     const value = web3.utils.toWei(String(order.price));
+
+    setBusyCourseId(course.id);
 
     if (isNewPurchase) {
       const emailHash = web3.utils.sha3(order.email);
@@ -50,6 +53,8 @@ export default function Marketplace({ courses }) {
       return res;
     } catch (err) {
       throw new Error(err.message);
+    } finally {
+      setBusyCourseId(null);
     }
   };
 
@@ -62,7 +67,14 @@ export default function Marketplace({ courses }) {
       return res;
     } catch (err) {
       throw new Error(err.message);
+    } finally {
+      setBusyCourseId(null);
     }
+  };
+
+  const cleanupModal = () => {
+    setSelectedCourse(null);
+    setIsNewPurchase(true);
   };
 
   return (
@@ -98,12 +110,17 @@ export default function Marketplace({ courses }) {
                 if (!ownedCourses.hasFinishedFirstFetch) {
                   return (
                     // <div style={{ height: "42px" }}></div>
-                    <Button variant="lightPurple" disabled={true}>
-                      <Loader size="sm" />
+                    <Button size="sm" variant="white" disabled={true}>
+                      <div className="flex items-center">
+                        <Loader size="sm" />
+                        <span className="ml-2">Loading State...</span>
+                      </div>
                     </Button>
                   );
                 }
 
+                const isBusy = busyCourseId === course.id;
+                // const isBusy = true;
                 if (owned) {
                   return (
                     <>
@@ -141,9 +158,16 @@ export default function Marketplace({ courses }) {
                     size="sm"
                     onClick={() => setSelectedCourse(course)}
                     variant="lightPurple"
-                    disabled={!hasConnectedWallet}
+                    disabled={!hasConnectedWallet || isBusy}
                   >
-                    Purchase
+                    {isBusy ? (
+                      <div className="flex items-center">
+                        <Loader size="sm" />
+                        <div className="ml-2">In Progress</div>
+                      </div>
+                    ) : (
+                      <div>Purchase</div>
+                    )}
                   </Button>
                 );
               }}
@@ -155,13 +179,11 @@ export default function Marketplace({ courses }) {
         <OrderModal
           course={selectedCourse}
           isNewPurchase={isNewPurchase}
-          onSubmit={purchaseCourse}
-          onClose={() => {
-            {
-              setSelectedCourse(null);
-              setIsNewPurchase(true);
-            }
+          onSubmit={(formData, course) => {
+            purchaseCourse(formData, course);
+            cleanupModal();
           }}
+          onClose={cleanupModal}
         />
       )}
     </>
