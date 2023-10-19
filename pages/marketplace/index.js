@@ -37,18 +37,28 @@ export default function Marketplace({ courses }) {
         { t: "bytes32", v: orderHash }
       );
 
-      withToast(_purchaseCourse(hexCourseId, proof, value));
+      withToast(_purchaseCourse({ hexCourseId, proof, value }, course));
       // console.log({ hexCourseId, orderHash, emailHash, proof, value });
     } else {
-      withToast(_repurchaseCourse(orderHash, value));
+      withToast(_repurchaseCourse({ CourseHash: orderHash, value }, course));
     }
   };
 
-  const _purchaseCourse = async (hexCourseId, proof, value) => {
+  const _purchaseCourse = async ({ hexCourseId, proof, value }, course) => {
     try {
       const res = await contract.methods
         .purchaseCourse(hexCourseId, proof)
         .send({ from: account.data, value });
+      ownedCourses.mutate([
+        ...ownedCourses.data,
+        {
+          ...course,
+          proof,
+          state: "purchased",
+          owner: account.data,
+          price: value,
+        },
+      ]);
 
       return res;
     } catch (err) {
@@ -58,11 +68,12 @@ export default function Marketplace({ courses }) {
     }
   };
 
-  const _repurchaseCourse = async (courseHash, value) => {
+  const _repurchaseCourse = async ({ courseHash, value }, course) => {
     try {
       const res = await contract.methods
         .repurchaseCourse(courseHash)
         .send({ from: account.data, value });
+      ownedCourses.mutate();
 
       return res;
     } catch (err) {
