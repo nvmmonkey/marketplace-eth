@@ -1,5 +1,5 @@
 const HDWalletProvider = require("@truffle/hdwallet-provider");
-const keys = require("./keys.json")
+const keys = require("./keys.json");
 
 module.exports = {
   contracts_build_directory: "./public/contracts",
@@ -32,3 +32,11 @@ module.exports = {
     },
   },
 };
+
+
+
+// transaction hash:0x18dd655beca174165cbd429bd733267eb84d114aff88a34b09e6b61d4929455e
+// contract address:0xEd212Eff62b9F4BE3c18451da621F03D1ba18abc
+// Gas Price: 0.00000000250000001 ETH * 1495078 gas unit used 
+// => 0.003737695015 ETH used
+// => 0.00373769501495078 on txs
