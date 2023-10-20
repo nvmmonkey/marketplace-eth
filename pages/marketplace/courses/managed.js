@@ -13,6 +13,7 @@ import {
 import { BaseLayout } from "@components/ui/layout";
 import { MarketHeader } from "@components/ui/marketplace";
 import { normalizeOwnedCourse } from "@utils/normalize";
+import { withToast } from "@utils/toast";
 import { useEffect, useState } from "react";
 
 //BEFORE TX BALANCE -  90781604576224587420 - 90.78160457622458742 ETH
@@ -76,18 +77,21 @@ export default function ManagedCourses() {
 
   const changeCourseState = async (courseHash, method) => {
     try {
-      await contract.methods[method](courseHash).send({ from: account.data });
+      const res = await contract.methods[method](courseHash).send({
+        from: account.data,
+      });
+      return res;
     } catch (e) {
-      console.error(e.message);
+      throw new Error(e.message);
     }
   };
 
   const activateCourse = async (courseHash) => {
-    changeCourseState(courseHash, "activateCourse");
+    withToast(changeCourseState(courseHash, "activateCourse"));
   };
 
   const deactivateCourse = async (courseHash) => {
-    changeCourseState(courseHash, "deactivateCourse");
+    withToast(changeCourseState(courseHash, "deactivateCourse"));
   };
 
   const searchCourse = async (hash) => {
