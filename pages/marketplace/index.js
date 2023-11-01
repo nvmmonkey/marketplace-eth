@@ -132,7 +132,10 @@ export default function Marketplace({ courses }) {
                     <Button size="sm" variant="white" disabled={true}>
                       <div className="flex items-center">
                         <Loader size="sm" />
-                        <span className="ml-2">Loading State...</span>
+
+                        <span className="ml-2">
+                          {hasConnectedWallet ? "Loading State..." : "Connect"}
+                        </span>
                       </div>
                     </Button>
                   );
