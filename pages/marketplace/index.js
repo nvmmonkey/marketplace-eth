@@ -40,7 +40,7 @@ export default function Marketplace({ courses }) {
       withToast(_purchaseCourse({ hexCourseId, proof, value }, course));
       // console.log({ hexCourseId, orderHash, emailHash, proof, value });
     } else {
-      withToast(_repurchaseCourse({ CourseHash: orderHash, value }, course));
+      withToast(_repurchaseCourse({ courseHash: orderHash, value }, course));
     }
   };
 
@@ -73,7 +73,15 @@ export default function Marketplace({ courses }) {
       const res = await contract.methods
         .repurchaseCourse(courseHash)
         .send({ from: account.data, value });
-      ownedCourses.mutate();
+
+      const index = ownedCourses.data.findIndex((c) => c.id === course?.id);
+
+      if (index >= 0) {
+        ownedCourses.data[index].state = "purchased";
+        ownedCourses.mutate(ownedCourses.data);
+      } else {
+        ownedCourses.mutate();
+      }
 
       return res;
     } catch (err) {
@@ -154,9 +162,16 @@ export default function Marketplace({ courses }) {
                               setIsNewPurchase(false);
                               setSelectedCourse(course);
                             }}
-                            disabled={false}
+                            disabled={isBusy}
                           >
-                            Fund to Activate
+                            {isBusy ? (
+                              <div className="flex items-center">
+                                <Loader size="sm" />
+                                <div className="ml-2">In Progress</div>
+                              </div>
+                            ) : (
+                              <div>Fund to Activate</div>
+                            )}
                           </Button>
                         )}
                       </div>
