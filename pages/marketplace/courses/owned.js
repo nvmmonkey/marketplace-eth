@@ -1,5 +1,6 @@
 import {
   useAccount,
+  useNetwork,
   useOwnedCourses,
   useWalletInfo,
 } from "@components/hooks/web3";
@@ -11,9 +12,11 @@ import { MarketHeader } from "@components/ui/marketplace";
 import { getAllCourses } from "@content/courses/fetcher";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export default function OwnedCourses({ courses }) {
   const { account } = useAccount();
+  const { network } = useWalletInfo();
   const { requireInstall } = useWeb3();
   const router = useRouter();
   const { ownedCourses } = useOwnedCourses(courses, account.data);
@@ -21,8 +24,16 @@ export default function OwnedCourses({ courses }) {
   return (
     <>
       <MarketHeader />
+
       <section className="grid grid-cols-1">
-        {ownedCourses.isEmpty && (
+        {!network.isSupported && (
+          <div className="w-1/2">
+            <Message type="danger">
+              <div>Please connect to the correct network.</div>
+            </Message>
+          </div>
+        )}
+        {network.isSupported && ownedCourses.isEmpty && (
           <div className="w-1/2">
             <Message type="warning">
               <div>You don&apos;t own any courses.</div>
@@ -37,7 +48,9 @@ export default function OwnedCourses({ courses }) {
         {account.isEmpty && (
           <div className="w-1/2">
             <Message type="warning">
-              <div>Please connect to Metamask.</div>
+              <div>
+                <i>Please connect to Metamask.</i>
+              </div>
             </Message>
           </div>
         )}
