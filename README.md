@@ -1,8 +1,10 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Intro
 
 The Marketplace Dapps is deploy on [Sepolia](https://sepolia.etherscan.io/address/0xed212eff62b9f4be3c18451da621f03d1ba18abc#code) and [Vercel](https://marketplace-eth-eight.vercel.app/)
 
 ## Getting Started
+
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 First, run the development server:
 
